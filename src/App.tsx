@@ -44,7 +44,7 @@ const App: React.FC = () => {
   useEffect(() => {
     // Initialize with a random organism
     if (!currentOrganism) {
-      const grid = simulationEngine.createInitialGrid(30, 30);
+      const grid = simulationEngine.createInitialGrid(50, 50);
       const rules = simulationEngine.createRandomRules(8);
       const organism = simulationEngine.createOrganism(grid, rules);
       dispatch(setCurrentOrganism(organism));

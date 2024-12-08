@@ -15,7 +15,7 @@ export class SimulationEngine {
 
   public createInitialGrid(width: number, height: number): Grid {
     return Array(height).fill(0).map(() => 
-      Array(width).fill(0).map(() => Math.random() > 0.8 ? 1 : 0)
+      Array(width).fill(0).map(() => Math.random() < 0.3 ? 1 : 0)
     );
   }
 
@@ -35,7 +35,20 @@ export class SimulationEngine {
       for (let x = 0; x < grid[0].length; x++) {
         const neighborhood = this.getNeighborhood(grid, x, y);
         const matchingRule = this.findMatchingRule(neighborhood, rules);
-        newGrid[y][x] = matchingRule ? matchingRule.nextState : 0;
+        if (matchingRule) {
+          newGrid[y][x] = matchingRule.nextState;
+        } else {
+          // Apply Conway's Game of Life rules as default
+          const liveNeighbors = neighborhood.filter(cell => cell === 1).length;
+          const currentCell = grid[y][x];
+          if (currentCell === 1) {
+            // Live cell survives if it has 2 or 3 live neighbors
+            newGrid[y][x] = (liveNeighbors === 2 || liveNeighbors === 3) ? 1 : 0;
+          } else {
+            // Dead cell becomes alive if it has exactly 3 live neighbors
+            newGrid[y][x] = liveNeighbors === 3 ? 1 : 0;
+          }
+        }
       }
     }
 
